@@ -19,6 +19,7 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = {
+        "https://zoobiin.netlify.app",
         "https://chatappzoobi.netlify.app",
         "https://zoobichatapp.netlify.app",
         "https://zoobi.online",
