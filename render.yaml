@@ -1,12 +1,14 @@
 services:
   - type: web
     name: zoobi-chat-backend
-    env: docker
+    runtime: docker
     plan: free
     region: oregon
     envVars:
-      - key: SERVER_PORT
+      - key: PORT
         value: 8080
+      - key: JWT_SECRET
+        generateValue: true
       - key: SPRING_DATASOURCE_URL
         fromDatabase:
           name: zoobi-db
@@ -26,5 +28,7 @@ services:
 
 databases:
   - name: zoobi-db
+    databaseName: zoobi_db
+    user: zoobi_user
     plan: free
     region: oregon
