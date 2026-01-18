@@ -256,8 +256,15 @@
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
         }
 
         .user-info {
@@ -304,6 +311,76 @@
             display: flex;
             align-items: center;
             gap: 12px;
+        }
+
+        /* Header Action Icons */
+        .header-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .header-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: #262626;
+            padding: 0;
+        }
+
+        .header-icon:hover {
+            opacity: 0.6;
+        }
+
+        .header-icon.phone::before {
+            content: "📞";
+        }
+
+        .header-icon.video::before {
+            content: "📹";
+        }
+
+        .header-icon.info::before {
+            content: "ℹ️";
+        }
+
+        /* Info Panel */
+        .info-panel {
+            position: fixed;
+            right: -320px;
+            top: 0;
+            width: 320px;
+            height: 100vh;
+            background: white;
+            border-left: 1px solid #DBDBDB;
+            transition: right 0.3s;
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .info-panel.open {
+            right: 0;
+        }
+
+        .info-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .info-panel h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .close-panel {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
         }
 
         .chat-header h3 {
@@ -407,6 +484,110 @@
             color: #8E8E8E;
         }
 
+        /* Message Status Icons */
+        .message-status {
+            font-size: 12px;
+            margin-left: 4px;
+            color: #0095F6;
+        }
+
+        .message-status.delivered {
+            color: #8E8E8E;
+        }
+
+        .message-status.seen {
+            color: #0095F6;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: none;
+            padding: 8px 16px;
+            color: #8E8E8E;
+            font-size: 12px;
+            font-style: italic;
+        }
+
+        .typing-indicator.active {
+            display: block;
+        }
+
+        .typing-dots {
+            display: inline-flex;
+            gap: 3px;
+            margin-left: 5px;
+        }
+
+        .typing-dots span {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #8E8E8E;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(-6px);
+            }
+        }
+
+        /* Message Reactions */
+        .message-wrapper {
+            position: relative;
+        }
+
+        .message-reaction {
+            position: absolute;
+            bottom: -8px;
+            right: 8px;
+            background: white;
+            border: 1px solid #DBDBDB;
+            border-radius: 12px;
+            padding: 2px 6px;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .message:hover .reaction-btn {
+            display: flex;
+        }
+
+        .reaction-btn {
+            display: none;
+            position: absolute;
+            top: -10px;
+            right: 8px;
+            background: white;
+            border: 1px solid #DBDBDB;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .reaction-btn:hover {
+            background: #F5F5F5;
+        }
+
         .chat-input {
             padding: 20px;
             border-top: 1px solid #DBDBDB;
@@ -415,11 +596,46 @@
 
         .chat-input-form {
             display: flex;
-            gap: 0;
+            gap: 8px;
             align-items: center;
             border: 1px solid #DBDBDB;
             border-radius: 22px;
             padding: 8px 16px;
+        }
+
+        /* Instagram Input Icons */
+        .input-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: #262626;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-icon:hover {
+            opacity: 0.6;
+        }
+
+        .input-icon.camera::before {
+            content: "📷";
+        }
+
+        .input-icon.image::before {
+            content: "🖼️";
+        }
+
+        .input-icon.mic::before {
+            content: "🎤";
+        }
+
+        .input-icon.emoji::before {
+            content: "😊";
         }
 
         .chat-input-form input {
