@@ -668,6 +668,52 @@
             color: #B2DFFC;
             cursor: not-allowed;
         }
+
+        /* Image Preview Area */
+        .image-preview-container {
+            display: none;
+            padding: 10px 20px;
+            background: #f0f0f0;
+            border-top: 1px solid #DBDBDB;
+            position: relative;
+        }
+
+        .image-preview-container.active {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .preview-image {
+            max-height: 100px;
+            border-radius: 8px;
+            border: 1px solid #DBDBDB;
+        }
+
+        .remove-preview {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 5px;
+            left: 85px;
+            /* Adjust based on image position */
+        }
+
+        .message-image {
+            max-width: 100%;
+            border-radius: 12px;
+            margin-bottom: 4px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -812,8 +858,24 @@
             </div>
 
             <div class="chat-input">
+                <!-- Image Preview Container -->
+                <div id="imagePreviewContainer" class="image-preview-container">
+                    <img id="imagePreview" src="" alt="Preview" class="preview-image">
+                    <button class="remove-preview" onclick="clearImagePreview()">×</button>
+                </div>
+
                 <form class="chat-input-form" id="message-form">
+                    <!-- Hidden File Input -->
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;"
+                        onchange="handleImageSelect(event)">
+
+                    <button type="button" class="input-icon camera" title="Camera"
+                        onclick="document.getElementById('imageInput').click()"></button>
+                    <button type="button" class="input-icon image" title="Gallery"
+                        onclick="document.getElementById('imageInput').click()"></button>
+                    <button type="button" class="input-icon mic" title="Voice Message"></button>
                     <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off" disabled>
+                    <button type="button" class="input-icon emoji" title="Emoji"></button>
                     <button type="submit" class="send-btn" id="send-btn" disabled>Send</button>
                 </form>
             </div>
@@ -830,7 +892,37 @@
         let stompClient = null;
         let currentUser = null;
         let selectedRecipient = null;
+
         let allUsers = [];
+        let currentBase64Image = null;
+
+        function handleImageSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    currentBase64Image = e.target.result;
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = currentBase64Image;
+                    document.getElementById('imagePreviewContainer').classList.add('active');
+                    document.getElementById('message-input').focus();
+
+                    // Enable send button
+                    const btn = document.getElementById('send-btn');
+                    btn.disabled = false;
+                    btn.style.opacity = "1";
+                    btn.style.cursor = "pointer";
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function clearImagePreview() {
+            currentBase64Image = null;
+            document.getElementById('imagePreview').src = '';
+            document.getElementById('imagePreviewContainer').classList.remove('active');
+            document.getElementById('imageInput').value = ''; // Reset file input
+        }
 
         // Toggle between login and signup
         document.getElementById('show-signup').addEventListener('click', (e) => {
@@ -1207,19 +1299,23 @@
         // Send message
         document.getElementById('message-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const messageContent = document.getElementById('message-input').value.trim();
+            const messageInput = document.getElementById('message-input');
+            const messageContent = messageInput.value.trim();
 
-            if (messageContent && stompClient && selectedRecipient) {
+            if ((messageContent || currentBase64Image) && stompClient && selectedRecipient) {
                 const chatMessage = {
                     sender: currentUser.username,
                     recipient: selectedRecipient,
-                    content: messageContent,
-                    type: 'CHAT',
+                    content: currentBase64Image || messageContent,
+                    type: currentBase64Image ? 'IMAGE' : 'CHAT',
                     timestamp: Date.now()
                 };
 
                 stompClient.send("/app/chat.private", {}, JSON.stringify(chatMessage));
-                document.getElementById('message-input').value = '';
+
+                // Clear inputs
+                messageInput.value = '';
+                clearImagePreview();
             }
         });
 
@@ -1240,7 +1336,10 @@
             messageDiv.innerHTML = `
                 <div class="message-content">
                     <div class="message-sender">${message.sender}</div>
-                    ${escapeHtml(message.content)}
+                    ${message.type === 'IMAGE'
+                    ? `<img src="${message.content}" class="message-image" alt="Image">`
+                    : escapeHtml(message.content)
+                }
                     <div class="message-time">${time}</div>
                 </div>
             `;

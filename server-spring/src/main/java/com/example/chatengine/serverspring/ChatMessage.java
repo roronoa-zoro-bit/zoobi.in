@@ -2,7 +2,6 @@ package com.example.chatengine.serverspring;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "messages")
@@ -17,8 +16,7 @@ public class ChatMessage {
     private String type;
 
     @NotBlank(message = "Message content is required")
-    @Size(max = 5000, message = "Message content must not exceed 5000 characters")
-    @Column(nullable = false, length = 5000)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @NotBlank(message = "Sender is required")
