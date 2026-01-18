@@ -4,18 +4,28 @@ services:
     env: docker
     plan: free
     region: oregon
+    dockerfilePath: ./server-spring/Dockerfile
     envVars:
       - key: SERVER_PORT
         value: 8080
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:h2:file:./data/chat_db
+        fromDatabase:
+          name: zoobi-db
+          property: connectionString
       - key: SPRING_DATASOURCE_USERNAME
-        value: sa
+        fromDatabase:
+          name: zoobi-db
+          property: user
       - key: SPRING_DATASOURCE_PASSWORD
-        value: ""
+        fromDatabase:
+          name: zoobi-db
+          property: password
       - key: SPRING_JPA_HIBERNATE_DDL_AUTO
         value: update
       - key: SPRING_JPA_DATABASE_PLATFORM
-        value: org.hibernate.dialect.H2Dialect
-      - key: SPRING_H2_CONSOLE_ENABLED
-        value: true
+        value: org.hibernate.dialect.PostgreSQLDialect
+
+databases:
+  - name: zoobi-db
+    plan: free
+    region: oregon
