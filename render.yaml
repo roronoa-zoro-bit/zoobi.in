@@ -4,8 +4,6 @@ services:
     env: docker
     plan: free
     region: oregon
-    dockerfilePath: ./server-spring/Dockerfile
-    dockerContext: .
     envVars:
       - key: SERVER_PORT
         value: 8080
