@@ -1024,36 +1024,20 @@
         <!-- Users Sidebar -->
         <div class="users-sidebar">
             <div class="sidebar-header">
-                <h2 id="current-username">Loading...</h2>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <div style="font-size: 12px; color: #4ade80;">Online</div>
-                    <button onclick="toggleFriendRequests()"
-                        style="position: relative; background: none; border: none; font-size: 20px; cursor: pointer;"
-                        title="Friend Requests">
-                        👥
-                        <span id="request-badge"
-                            style="position: absolute; top: -5px; right: -5px; background: #dc3545; color: white; border-radius: 50%; width: 15px; height: 15px; font-size: 10px; display: none; justify-content: center; align-items: center;">0</span>
-                    </button>
-                    <button onclick="logout()" style="background: none; border: none; font-size: 20px; cursor: pointer;"
-                        title="Logout">🚪</button>
-                </div>
-            </div>
-
-            <!-- Friend Requests Panel (Hidden by default) -->
-            <div id="requests-panel"
-                style="display: none; background: #f8f9fa; border-bottom: 1px solid #eee; padding: 10px;">
-                <h3 style="margin: 0 0 10px 0; font-size: 14px; text-transform: uppercase; color: #666;">Friend Requests
-                </h3>
-                <div id="pending-requests-list" style="max-height: 150px; overflow-y: auto;">
-                    <div style="color: #999; font-size: 12px; text-align: center;">No pending requests</div>
+                <h2>Chats</h2>
+                <div>
+                    <!-- Messenger Buttons (Settings/New Chat) -->
+                    <button onclick="logout()"
+                        style="background:#f0f2f5; border:none; width:36px; height:36px; border-radius:50%; cursor:pointer;">🚪</button>
                 </div>
             </div>
 
             <div class="search-box">
-                <input type="text" id="user-search" placeholder="Search users..." onkeyup="filterUsers(this.value)">
+                <input type="text" id="user-search" placeholder="Search Messenger" onkeyup="filterUsers(this.value)">
             </div>
+
             <div class="users-list" id="users-list">
-                <div class="empty-state">Loading users...</div>
+                <!-- Users will populate here -->
             </div>
         </div>
 
@@ -1565,6 +1549,20 @@
                 }
             } catch (e) {
                 console.error('Error loading history:', e);
+            }
+        }
+
+        // Thumbs Up Logic
+        function sendThumbsUp() {
+            if (stompClient && selectedRecipient) {
+                const chatMessage = {
+                    sender: currentUser.username,
+                    recipient: selectedRecipient,
+                    content: "👍",
+                    type: 'CHAT',
+                    timestamp: Date.now()
+                };
+                stompClient.send("/app/chat.private", {}, JSON.stringify(chatMessage));
             }
         }
 
