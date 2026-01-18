@@ -24,7 +24,7 @@ import java.util.Map;
 public class AdminController {
 
     // Secret admin code - CHANGE THIS TO YOUR OWN SECRET!
-    private static final String ADMIN_SECRET = "boxbi@#$%&123";
+    private static final String ADMIN_SECRET = "zoobi@#$%&123";
 
     @Autowired
     private UserRepository userRepository;

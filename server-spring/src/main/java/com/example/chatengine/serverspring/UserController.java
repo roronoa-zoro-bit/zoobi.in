@@ -19,12 +19,12 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = {
-        "https://chatappboxbi.netlify.app",
+        "https://chatappzoobi.netlify.app",
         "https://zoobichatapp.netlify.app",
-        "https://boxbi.online",
-        "https://www.boxbi.online",
+        "https://zoobi.online",
+        "https://www.zoobi.online",
         "https://boxmsg.netlify.app",
-        "https://boxbichat.netlify.app",
+        "https://zoobichat.netlify.app",
         "http://localhost:*",
         "http://127.0.0.1:*",
         "http://localhost:5500",
